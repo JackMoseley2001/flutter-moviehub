@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:moviehub/env.dart';
+import 'package:moviehub/models/detail_result.dart';
 import 'package:moviehub/models/search_result.dart';
 
 import 'package:http/http.dart' as http;
@@ -24,5 +25,16 @@ class API {
     }
   }
 
-  Future<void> searchByTitle(String title) {}
+  Future<DetailResult> searchByID(String id) async {
+    final searchURL = '$_apiURL&i=$id&plot=full';
+    var response = await http.get(searchURL);
+
+    if (response.statusCode == 200) {
+      final Map<String, dynamic> responseJSON = jsonDecode(response.body);
+      final DetailResult result = DetailResult.fromJson(responseJSON);
+      return result;
+    } else {
+      throw 'Invalid response from server';
+    }
+  }
 }
