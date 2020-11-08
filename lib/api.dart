@@ -8,14 +8,19 @@ import 'package:http/http.dart' as http;
 
 class API {
   final String _apiURL = 'https://www.omdbapi.com/?apikey=${ENV.apiKey}';
-  final String _imgURL = 'https://img.omdbapi.com/?apikey=${ENV.apiKey}';
 
+  //! Fails to load when special characters are in use e.g. I'm a celebrity
   Future<List<SearchResult>> searchByQuery(String query) async {
-    final searchURL = '$_apiURL&s=$query';
+    final searchURL = Uri.encodeFull('$_apiURL&s=$query');
     var response = await http.get(searchURL);
 
     if (response.statusCode == 200) {
       final responseJSON = jsonDecode(response.body);
+
+      if (responseJSON['Response'] == "False") {
+        throw responseJSON['Error'];
+      }
+
       final List<dynamic> jsonResults = responseJSON['Search'];
       final List<SearchResult> results =
           jsonResults.map((e) => SearchResult.fromJson(e)).toList();
@@ -26,7 +31,7 @@ class API {
   }
 
   Future<DetailResult> searchByID(String id) async {
-    final searchURL = '$_apiURL&i=$id&plot=full';
+    final searchURL = Uri.encodeFull('$_apiURL&i=$id&plot=full');
     var response = await http.get(searchURL);
 
     if (response.statusCode == 200) {

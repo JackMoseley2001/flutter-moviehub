@@ -12,6 +12,7 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+  GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   SearchBar _searchBar;
   List<SearchResult> _results = [];
 
@@ -29,15 +30,25 @@ class _HomePageState extends State<HomePage> {
   }
 
   void _startSearch(String text) async {
-    List<SearchResult> searchResults = await API().searchByQuery(text);
-    setState(() {
-      _results = searchResults;
-    });
+    try {
+      List<SearchResult> searchResults = await API().searchByQuery(text);
+      setState(() {
+        _results = searchResults;
+      });
+    } catch (e) {
+      SnackBar errorSnackbar = SnackBar(
+        content: Text(e.toString()),
+        duration: Duration(seconds: 2),
+        backgroundColor: Theme.of(context).accentColor,
+      );
+      ScaffoldMessenger.of(context).showSnackBar(errorSnackbar);
+    }
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      key: _scaffoldKey,
       appBar: _searchBar.build(context),
       body: Container(
         child: ListView.builder(
