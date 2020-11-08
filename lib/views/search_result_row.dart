@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:moviehub/models/search_result.dart';
+import 'package:moviehub/pages/details.dart';
 
 class SearchResultRow extends StatelessWidget {
   const SearchResultRow({Key key, this.result}) : super(key: key);
@@ -26,17 +27,26 @@ class SearchResultRow extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SafeArea(
-      child: Card(
-        child: InkWell(
-          // todo: Add detail screen
-          onTap: () => print('Row tapped with id: ${result.id}'),
-          child: Container(
-            padding: EdgeInsets.symmetric(vertical: 10),
-            child: GestureDetector(
-              onTap: () => print('Row tapped with id: ${result.id}'),
+      child: Padding(
+        padding: EdgeInsets.symmetric(horizontal: 10),
+        child: Card(
+          child: InkWell(
+            // todo: Add detail screen
+            onTap: () => Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => DetailPage(
+                          id: result.id,
+                          title: result.title,
+                        ))),
+            child: Container(
+              padding: EdgeInsets.symmetric(vertical: 10),
               child: Row(
                 children: [
-                  _getPosterImage(),
+                  Hero(
+                    tag: result.id,
+                    child: _getPosterImage(),
+                  ),
                   Expanded(
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.start,
