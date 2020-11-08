@@ -28,7 +28,7 @@ class SearchResultRow extends StatelessWidget {
   Widget build(BuildContext context) {
     return SafeArea(
       child: Padding(
-        padding: EdgeInsets.symmetric(horizontal: 10),
+        padding: EdgeInsets.symmetric(horizontal: 10, vertical: 5),
         child: Card(
           child: InkWell(
             // todo: Add detail screen
@@ -43,10 +43,7 @@ class SearchResultRow extends StatelessWidget {
               padding: EdgeInsets.symmetric(vertical: 10),
               child: Row(
                 children: [
-                  Hero(
-                    tag: result.id,
-                    child: _getPosterImage(),
-                  ),
+                  _getPosterImage(),
                   Expanded(
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.start,
